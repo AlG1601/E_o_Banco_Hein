@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E o Banco, hein</title>
+
+    <script>
+
+        var saldo = 100;
+        var ver_extrato = [' transferiu R$ ' + 8.50, ' sacou R$ ' + 10];
+
+        // - Ao acessar o sistema, pergunte o nome do usuário e diga "Olá {Nome} é um prazer ter você por aqui!".
+        var nome = prompt("Digite o seu nome:");
+        alert("Olá " + nome + " é um prazer ter você por aqui!");
+
+        function inicio() {
+
+            // - No menu principal, a ordem das opções deve ser: Saldo, Extrato, Saque, Depósito, Transferência e Sair. 
+            var escolha = parseInt(prompt("Digite 1 (Ver o Saldo), 2 (Para ver o Extrato), 3 (Para sacar o dinheiro), 4 (Para fazer um Depósito), 5 (Para fazer uma Transferência) e 6 (Para Sair)"));
+
+            // - Na função "inicio", utilize escolha/caso (switch/case) para validar a opção escolhida pelo usuário.
+
+            if (escolha == 1) {
+
+                ver_saldo();
+
+            } else if (escolha == 2) {
+
+                extrato();
+
+            } else if (escolha == 3) {
+
+                sacar();
+                
+            } else if (escolha == 4) {
+                
+                deposito();
+
+            } else if (escolha == 5) {
+
+                transferencia();
+
+            } else if(escolha == 6) {
+
+                sair();
+
+            } else {
+                alert("Por favor, informe um valor entre 1 e 6!")
+                inicio()
+            }
+
+            function ver_saldo() {
+
+                validar_acesso();
+
+                // Visualizar saldo
+                alert("O saldo na conta é R$ " + saldo);
+                inicio();
+
+            }
+
+            function extrato() {
+
+                validar_acesso();
+
+                // - Adicionar a opção para ver o extrato (Coloque algumas compras ou depósitos fictícios). 
+                alert(ver_extrato);
+                inicio();
+
+            }
+
+            function sacar() {
+
+                validar_acesso();
+
+                // - Sempre que o usuário for sacar dinheiro, o valor restante não pode ser negativo, ou seja, caso o usuário tente sacar mais do que tem em saldo, a ação não deve ocorrer. Exiba uma mensagem de "Operação não autorizada". 
+                // - Sempre que o usuário for sacar dinheiro, o valor a ser sacado não pode ser igual ou menor que zero. Exiba uma mensagem de "Operação não autorizada". 
+                var valor_do_saque = parseFloat(prompt("Qual o valor do saque?"));
+
+                if (valor_do_saque > saldo) {
+
+                    alert("Operação não autorizada! Saldo insuficiente");
+                    sacar();
+
+                } else if (valor_do_saque <= 0) {
+
+                    alert("Operação não autorizada! Digite um valor válido");
+                    sacar();
+
+                } else {
+
+                    saldo -= valor_do_saque;
+                    alert("Operação concluída com êxito!");
+                    ver_extrato.push(' sacou R$ ' + valor_do_saque);
+                    inicio();
+
+                }
+
+            }
+
+            function deposito() {
+
+                validar_acesso();
+
+                var valor_do_deposito = parseFloat(prompt("Informe o valor do depósito:"));
+
+                // - Caso o usuário informe um valor para depósito igual ou menor que zero, não deixe a operação ocorrer. Exiba uma mensagem de "Operação não autorizada". 
+                if (valor_do_deposito <= 0) {
+
+                    // - Sempre que o usuário for transferir dinheiro,  o valor a ser transferido não pode ser igual ou menor que zero, ou seja, caso o usuário tente transferir mais do que tem em saldo, a ação não deve ocorrer. Exiba uma mensagem de "Operação não autorizada". 
+                    alert("Operação não autorizada! Digite um valor válido");
+                    deposito();
+
+                } else {
+
+                    // Valor depositado
+                    saldo += valor_do_deposito;
+                    ver_extrato.push(' depositou R$ ' + valor_do_deposito);
+                    inicio();
+
+                }
+
+
+            }
+
+            function transferencia() {
+
+                validar_acesso();
+
+                // - Adicionar a opção para fazer uma transferência. A transferência consiste em você informar o número de uma conta (pode ser qualquer número, mas obrigatoriamente um número, ou seja, nenhum outro caractere deve ser aceito), perguntar o valor da transferência e remover o valor da conta da mesma forma como na ação do saldo. Caso o usuário tente transferir mais do que tem em saldo, a ação não deve ocorrer. Exiba uma mensagem de "Operação não autorizada". 
+                
+                var conta = parseInt(prompt("Informe o número da conta:"));
+                var valor_da_transferencia = parseFloat(prompt("Qual o valor da transferência?"));
+
+                if (valor_da_transferencia > saldo) {
+
+                    alert("Operação não autorizada! Saldo insuficiente");
+                    transferencia();
+
+                } else if (valor_da_transferencia <= 0) {
+
+                    // - Sempre que o usuário for transferir dinheiro,  o valor a ser transferido não pode ser igual ou menor que zero, ou seja, caso o usuário tente transferir mais do que tem em saldo, a ação não deve ocorrer. Exiba uma mensagem de "Operação não autorizada". 
+                    alert("Operação não autorizada! Digite um valor válido");
+                    transferencia();
+
+                } else {
+
+                    saldo -= valor_da_transferencia;
+                    ver_extrato.push(' transferiu R$ ' + valor_da_transferencia);
+                    alert("Operação concluída com êxito!");
+                    inicio();
+
+                }
+
+            }
+
+            function sair () {
+
+                // - Quando o usuário escolher sair do sistema, exiba uma mensagem agradecendo por utilizar os serviços do banco: "{Nome}, foi um prazer ter você por aqui!".
+                var confirmar = confirm("Você deseja sair?");
+
+                if (confirmar) {
+                    alert(nome + ", foi um prazer ter você por aqui!");
+
+                    window.close();
+                } else {
+                    inicio();
+                }
+                
+            }
+
+            function validar_acesso() {
+                
+                // - Sempre que o usuário for acessar o saldo, sacar, retirar o extrato ou transferir dinheiro é necessário que ele informe uma senha. Essa senha deve ser validada com uma condicional. A senha é 3589.
+                // - Caso a senha informada não seja a correta, é necessário chamar a função atual novamente. 
+                var senha = parseInt(prompt("Digite a senha:"));
+
+                if (senha !== 3589) {
+                    alert("Senha incorreta!");
+                    validar_acesso();
+                } else {
+                    
+                }
+
+            }
+        }
+
+        
+
+        inicio();
+
+    </script>
+
+</head>
+<body>
+    
+</body>
+</html>
